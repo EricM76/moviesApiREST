@@ -4,8 +4,7 @@ const express = require('express');
 let moviesRouter = require('./routes/movies');
 let actorsRouter = require('./routes/actors');
 let genresRouter = require('./routes/genres');
-let authRouter = require('./routes/auth')
-
+let authRouter = require('./routes/auth');
 
 const app = express();
 

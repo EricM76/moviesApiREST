@@ -5,15 +5,6 @@ const jwt = require('jsonwebtoken');
 const getUrl = (req) => req.protocol + '://' + req.get('host') + req.originalUrl;
 const getBaseUrl = (req) => req.protocol + '://' + req.get('host');
 
-const tokenValidate = (res) => {
-    if (!req.headers['token']) {
-        return res.status(401).json({
-            auth: false,
-            msg: "Token no enviado"
-        })
-    }
-}
-
 module.exports = {
     getAll: function (req, res) {
         db.Movie.findAll()
@@ -68,70 +59,52 @@ module.exports = {
 
     },
     create: function (req, res) {
-        tokenValidate(res)
-        try {
-            const jwtDecode = jwt.verify(token, process.env.SECRET)
-            db.User.findByPk(jwtDecode.id)
-                .then(user => {
-                    if (!user) {
-                        return res.status(401).json({
-                            msg: "El usuario no está registrado"
-                        })
-                    } else {
-                        const { title, rating, awards, release_date, length } = req.body
-                        db.Movie.create({
-                            title,
-                            rating,
-                            awards,
-                            release_date,
-                            length
-                        })
-                            .then(function () {
-                                return res.status(201).json({
-                                    link: getBaseUrl(req) + '/api/movies/' + pelicula.id,
-                                    msg: "Pelicula añadida con éxito"
-                                })
-                            })
-                            .catch(error => {
-                                switch (error.name) {
-                                    case "SequelizeValidationError":
-                                        let erroresMsg = [];
-                                        let erroresNotNull = [];
-                                        let erroresValidation = [];
-                                        error.errors.forEach(error => {
-                                            erroresMsg.push(error.message)
-                                            if (error.type == "notNull Violation") {
-                                                erroresNotNull.push(error.message)
-                                            }
-                                            if (error.type == "Validation error") {
-                                                erroresValidation.push(error.message)
-                                            }
-                                        });
-                                        let response = {
-                                            status: 400,
-                                            messages: "datos faltantes o erróneos",
-                                            errores: {
-                                                cantidad: erroresMsg.length,
-                                                msg: erroresMsg,
-                                                notNull: erroresNotNull,
-                                                validation: erroresValidation
-                                            }
-                                        }
-                                        return res.status(400).json(response)
-                                    default:
-                                        return res.status(500).json(error)
-                                }
-                            })
-                    }
-                })
-        } catch (error) {
-            res.status(403).json({
-                error,
-                status : 403,
-                msg : "Token inválido"
+     
+        const { title, rating, awards, release_date, length } = req.body
+        db.Movie.create({
+            title,
+            rating,
+            awards,
+            release_date,
+            length
+        })
+        .then(movie => {
+            return res.status(201).json({
+                link: getBaseUrl(req) + '/api/movies/' + movie.id,
+                msg: "Pelicula añadida con éxito"
             })
-        }
-    },
+        })
+        .catch(error => {
+            switch (error.name) {
+                case "SequelizeValidationError":
+                    let erroresMsg = [];
+                    let erroresNotNull = [];
+                    let erroresValidation = [];
+                    error.errors.forEach(error => {
+                        erroresMsg.push(error.message)
+                        if (error.type == "notNull Violation") {
+                            erroresNotNull.push(error.message)
+                        }
+                        if (error.type == "Validation error") {
+                            erroresValidation.push(error.message)
+                        }
+                    });
+                    let response = {
+                        status: 400,
+                        messages: "datos faltantes o erróneos",
+                        errores: {
+                            cantidad: erroresMsg.length,
+                            msg: erroresMsg,
+                            notNull: erroresNotNull,
+                            validation: erroresValidation
+                        }
+                    }
+                    return res.status(400).json(response)
+                default:
+                    return res.status(500).json({error})
+            }
+        })
+     },
     update: function (req, res) {
         const { title, rating, awards, release_date, length } = req.body
 

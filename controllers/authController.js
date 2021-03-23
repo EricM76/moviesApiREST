@@ -16,11 +16,19 @@ module.exports = {
         res.status(200).json({
             register : {
                 endpoint : getBaseUrl(req) + '/register',
-                method : 'POST'
+                method : 'POST',
+                dataRequired : {
+                    email : 'string',
+                    pass : 'string'
+                }
             },
             login : {
                 endpoint : getBaseUrl(req) + '/login',
-                method : 'POST'
+                method : 'POST', 
+                dataRequired : {
+                    email : 'string',
+                    pass : 'string'
+                }
             },
             movies : {
                 all : {
@@ -37,7 +45,7 @@ module.exports = {
                     dataRequired : {
                         title : 'string(500)',
                         rating : 'decimal(3,1) UNSIGNED',
-                        awards : 'integer UNSIGNED',
+                        awards : 'integer UNSIGNED (opcional)',
                         release_date : 'datetime',
                         length : 'integer UNSIGNED (opcional)',
                         genre_id : 'integer (opcional)'
@@ -71,7 +79,7 @@ module.exports = {
                 },
                 process.env.SECRET,
                 {
-                    expiresIn:120 //120 segundos
+                    expiresIn:60*5 //120 segundos
                 }
                 )
           return res.status(200).json({
@@ -105,7 +113,7 @@ module.exports = {
                 },
                 process.env.SECRET,
                 {
-                    expiresIn:120 //120 segundos
+                    expiresIn:60*5 //120 segundos
                 })
 
             return res.status(200).json({

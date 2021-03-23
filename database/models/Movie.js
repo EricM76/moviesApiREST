@@ -49,22 +49,11 @@ module.exports = function(sequelize, dataTypes) {
                     msg: "Tenés que indicar la fecha de estreno de la película"
                 }
             }
-
         },
         awards: {
             type: dataTypes.INTEGER(10).UNSIGNED,
             allowNull: false,
-            validate: {
-                notNull: {
-                    args: true,
-                    msg: "El campo awards no puede ser nulo"
-                },
-                notEmpty: {
-                    args: true,
-                    msg: "Tenés que indicar la cantidad de premios de la película"
-                }
-            }
-
+            defaultValue : '0'
         },
         length: dataTypes.INTEGER(10).UNSIGNED
     }
