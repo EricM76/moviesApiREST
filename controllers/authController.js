@@ -17,7 +17,7 @@ module.exports = {
             register : {
                 endpoint : getBaseUrl(req) + '/register',
                 method : 'POST',
-                dataRequired : {
+                columns : {
                     email : 'string',
                     pass : 'string'
                 }
@@ -25,7 +25,7 @@ module.exports = {
             login : {
                 endpoint : getBaseUrl(req) + '/login',
                 method : 'POST', 
-                dataRequired : {
+                columns : {
                     email : 'string',
                     pass : 'string'
                 }
@@ -42,7 +42,7 @@ module.exports = {
                 create : {
                     endpoint : getBaseUrl(req) + '/api/movies/create',
                     method : 'POST',
-                    dataRequired : {
+                    columns : {
                         title : 'string(500)',
                         rating : 'decimal(3,1) UNSIGNED',
                         awards : 'integer UNSIGNED (opcional)',
@@ -60,6 +60,33 @@ module.exports = {
                     method : 'DELETE'
                 },
                 
+            },
+            genres : {
+                all : {
+                    endpoint : getBaseUrl(req) + '/api/genres',
+                method : 'GET'
+                },
+                one : {
+                    endpoint : getBaseUrl(req) + '/api/genres/{id}',
+                    method : 'GET'
+                },
+                create : {
+                    endpoint : getBaseUrl(req) + '/api/genres/create',
+                    method : 'POST',
+                    columns : {
+                        name : 'string(100)',
+                        ranking : 'INTEGER(10) UNSIGNED UNIQUE',
+                        active : 'integer UNSIGNED (opcional)'
+                    }
+                },
+                update : {
+                    endpoint : getBaseUrl(req) + '/api/genres/update/{id}',
+                    method : 'PUT'
+                },
+                delete : {
+                    endpoint : getBaseUrl(req) + '/api/genres/delete/{id}',
+                    method : 'DELETE'
+                },
             }
         })
     },

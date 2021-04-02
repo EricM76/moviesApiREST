@@ -10,7 +10,7 @@ module.exports = {
         db.Movie.findAll()
             .then(movies => {
                 movies.forEach(movie => {
-                    movie.setDataValue("link", getUrl(req) + '/' + movies.id)
+                    movie.setDataValue("link", getUrl(req) + '/' + movie.id)
                 });
                 let response = {
                     meta: {
@@ -22,6 +22,7 @@ module.exports = {
                 }
                 return res.status(200).json(response)
             })
+            .catch(error => res.status(404).send(error))
     },
     getById: function (req, res) {
         if (req.params.id % 1 !== 0) {
