@@ -7,7 +7,12 @@ const getBaseUrl = (req) => req.protocol + '://' + req.get('host');
 
 module.exports = {
     getAll: function (req, res) {
-        db.Movie.findAll()
+        db.Movie.findAll({
+            include : [
+                {association : 'genero'},
+                {association : 'actores'}
+            ]
+        })
             .then(movies => {
                 movies.forEach(movie => {
                     movie.setDataValue("link", getUrl(req) + '/' + movie.id)
@@ -34,7 +39,15 @@ module.exports = {
             }
             return res.status(404).json(response)
         } else {
-            db.Movie.findByPk(req.params.id)
+            db.Movie.findOne({
+                where : {
+                    id: req.params.id
+                },
+                include : [
+                    {association :'genero'},
+                    {association : 'actores'}
+                ]
+            })
                 .then(movie => {
                     if (movie) {
                         let response = {

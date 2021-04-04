@@ -55,7 +55,12 @@ module.exports = function(sequelize, dataTypes) {
             allowNull: false,
             defaultValue : '0'
         },
-        length: dataTypes.INTEGER(10).UNSIGNED
+        length: {
+            type: dataTypes.INTEGER(10).UNSIGNED
+        },
+        genre_id : {
+            type : dataTypes.INTEGER.UNSIGNED
+        }
     }
 
     let config = {
@@ -65,5 +70,20 @@ module.exports = function(sequelize, dataTypes) {
     }
 
     let Movie = sequelize.define(alias, cols, config)
+
+    Movie.associate = function(models){
+
+        Movie.belongsTo(models.Genre,{
+            as : 'genero',
+            foreignKey : 'genre_id'
+        })
+
+        Movie.belongsToMany(models.Actor,{
+            as : 'actores',
+            through : 'actor_movie',
+            foreignKey : 'movie_id',
+            otherKey : 'actor_id'
+        })
+    }
     return Movie
 }
