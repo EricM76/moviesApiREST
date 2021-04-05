@@ -5,6 +5,7 @@ const verifyData = (email,pass,res) => {
     if(!email || !pass){
         return res.status(401).json({
             status : 401,
+            auth : false,
             msg : 'Debes ingresar email y constraseña (pass)'
         })
     }
@@ -94,6 +95,22 @@ module.exports = {
         const {email, pass} = req.body;
         
         verifyData(email,pass,res)
+
+        db.User.findOne({
+            where : {
+                email
+            }
+        })
+        .then(user => {
+            if(user) {
+                return res.status(401).json({
+                    status : 401,
+                    auth : false,
+                    msg : 'El email ya se encuentra registrado'
+                })
+            }
+        })
+        .catch(error => res.status(500).json(error))
         
         db.User.create({
             email,
@@ -106,7 +123,7 @@ module.exports = {
                 },
                 process.env.SECRET,
                 {
-                    expiresIn:60*5 //120 segundos
+                    expiresIn:60*60 //120 segundos
                 }
                 )
           return res.status(200).json({
