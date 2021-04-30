@@ -74,13 +74,14 @@ module.exports = {
     },
     create: function (req, res) {
      
-        const { title, rating, awards, release_date, length } = req.body
+        const { title, rating, awards, release_date, length, genre_id} = req.body
         db.Movie.create({
             title,
             rating,
             awards,
             release_date,
-            length
+            length, 
+            genre_id
         })
         .then(movie => {
             return res.status(201).json({
@@ -120,14 +121,15 @@ module.exports = {
         })
      },
     update: function (req, res) {
-        const { title, rating, awards, release_date, length } = req.body
+        const { title, rating, awards, release_date, length, genre_id } = req.body
 
         db.Movie.update({
             title,
             rating,
             awards,
             release_date,
-            length
+            length,
+            genre_id
         },
             {
                 where: {
